@@ -22,8 +22,8 @@ public class ChatServer implements ChatServerConnectionListener {
     private final SSLServerSocket serverSocket;
     private final ExecutorService executorService;
     private final ArrayList<ChatServerThread> threads;
-    private final ArrayList<String> activeUsers;
-    private final ArrayList<String> inactiveUsers;
+    private static ArrayList<String> activeUsers = null;
+    private static ArrayList<String> inactiveUsers = null;
     private int clients;
     private final int MAX_CONNECTIONS = 5;
 
@@ -74,8 +74,8 @@ public class ChatServer implements ChatServerConnectionListener {
 
     @Override
     public void clientMessageRecieved(ChatServerThread chatServerThread, HashMap<String, Object> message) {
-        customPrint((String) message.get(KeyValues.KEY_USERNAME)+" sent a message.");
-        existingMessages.add(MessageResponder.respondToTextMessage(message));
+        customPrint((String) message.get(KeyValues.KEY_USERNAME)+" sent a message: "+message);
+        existingMessages.add((ArrayList<String>) message.get(KeyValues.KEY_MESSAGE));
         sendMessageToEveryoneExcept(message, chatServerThread);
     }
 
@@ -91,7 +91,8 @@ public class ChatServer implements ChatServerConnectionListener {
         customPrint(username+" connected: User IP: "+chatServerThread.getIP()+". Total connected: "+clients);
         activeUsers.add(username);
         inactiveUsers.remove(username);
-        sendMessageToEveryone(MessageResponder.respondToHandshakeMessage(existingMessages));
+        sendMessageToUser(MessageResponder.respondToHandshakeMessage(existingMessages), chatServerThread);
+        sendMessageToEveryoneExcept(MessageResponder.respondToClientListRequestMessage(activeUsers, inactiveUsers), chatServerThread);
     }
 
     private void sendMessageToEveryone(HashMap<String, Object> message){

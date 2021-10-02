@@ -21,6 +21,7 @@ public class ChatServerThread{
     private final SSLSocket socket;
 
     public ChatServerThread(SSLSocket socket, ChatServer chatServer){
+        customPrint("Thread created");
         this.socket = socket;
         try{
             this.objectInputStream = new ObjectInputStream(socket.getInputStream());
@@ -28,7 +29,7 @@ public class ChatServerThread{
             this.chatServerConnectionListener = chatServer;
             this.username = null;
         }catch(IOException e){
-            System.out.println(e);
+//            customPrint(username+);
         }
     }
 
@@ -40,8 +41,12 @@ public class ChatServerThread{
                 username = message.get(KEY_USERNAME).toString();
                 chatServerConnectionListener.clientConnected(this, username);
             }
-            case QUERY_SEND_MESSAGE -> chatServerConnectionListener.clientMessageRecieved(this, message);
-            case QUERY_CLIENT_LIST -> chatServerConnectionListener.clientListRequestRecieved(this);
+            case QUERY_SEND_MESSAGE -> {
+                chatServerConnectionListener.clientMessageRecieved(this, message);
+            }
+            case QUERY_CLIENT_LIST -> {
+                chatServerConnectionListener.clientListRequestRecieved(this);
+            }
         }
     }
 
@@ -49,20 +54,20 @@ public class ChatServerThread{
         try{
             while(true){
                 if (objectInputStream.available() >= 0){
-                    HashMap<String, Object> message = (HashMap<String, Object>)objectInputStream.readObject();
+                    HashMap<String, Object> message = (HashMap<String, Object>)objectInputStream.readUnshared();
                     customPrint("Message recieved from "+username);
                     resolveMessage(message);
                 }
             }
         }catch (Exception e){
             chatServerConnectionListener.clientDisconnected(this, username);
-            System.out.println(username+" disconnected");
         }
     }
 
     public void sendMessage(HashMap<String, Object> message){
         try{
             objectOutputStream.writeObject(message);
+            objectOutputStream.reset();
         }catch(IOException e){
             chatServerConnectionListener.clientDisconnected(this, username);
         }

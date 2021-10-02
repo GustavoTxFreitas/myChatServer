@@ -27,7 +27,8 @@ public class CredentialDatabaseHandler {
             connection = DriverManager.getConnection(url, user, password);
             customPrint("Connection established successfully!");
         }catch (Exception e){
-            System.out.println(e);
+            customPrint("Connection to credential database failed! Exiting...");
+            System.exit(1);
         }
     }
 

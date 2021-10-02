@@ -39,11 +39,4 @@ public class MessageResponder {
         return msg;
     }
 
-    public static ArrayList<String> respondToTextMessage(HashMap<String, Object> message){
-        ArrayList<String> msgBody = new ArrayList<>();
-        msgBody.add((String) message.get(KeyValues.KEY_USERNAME));
-        msgBody.add((String) message.get(KeyValues.KEY_MESSAGE));
-        return msgBody;
-    }
-
 }

@@ -18,7 +18,8 @@ public class ChatServerDatabaseHandler {
             connection = DriverManager.getConnection(url, user, password);
             customPrint("Connection established successfully.");
         }catch (Exception e){
-            System.out.println(e);
+            customPrint("Connection to chat database failed! Exiting...");
+            System.exit(1);
         }
     }
 
