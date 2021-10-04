@@ -73,11 +73,11 @@ public class CredentialServerThread implements Runnable{
         String alias = (String)message.get(KEY_USERNAME);
         int result = DatabaseHandler.createAccount(firstName, lastName, email, password, alias);
         HashMap<String, Object> responseMessage = null;
-        if (result == DatabaseHandler.SIGNUP_ALIAS_EXISTS_ERROR){
+        if (result == DatabaseHandler.ALIAS_EXISTS_ERROR){
             responseMessage = MessageResponder.respondToSignupRequestMessage(RESPONSE_CODE_FAILURE, "The specified username already exists!");
-        }else if (result == DatabaseHandler.SIGNUP_EMAIL_EXISTS_ERROR){
+        }else if (result == DatabaseHandler.EMAIL_EXISTS_ERROR){
             responseMessage = MessageResponder.respondToSignupRequestMessage(RESPONSE_CODE_FAILURE, "The specified email already exists!");
-        }else if (result == DatabaseHandler.SIGNUP_INTERNAL_ERROR){
+        }else if (result == DatabaseHandler.INTERNAL_SERVER_ERROR){
             responseMessage = MessageResponder.respondToSignupRequestMessage(RESPONSE_CODE_FAILURE, "Internal server error! Please try again.");
         }else if (result == DatabaseHandler.SIGNUP_SUCCESS){
             responseMessage = MessageResponder.respondToSignupRequestMessage(RESPONSE_CODE_SUCCESS, "");

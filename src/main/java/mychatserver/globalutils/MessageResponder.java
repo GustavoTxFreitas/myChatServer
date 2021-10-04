@@ -24,10 +24,11 @@ public class MessageResponder {
         return msg;
     }
 
-    public static HashMap<String, Object> respondToHandshakeMessage(ArrayList<ArrayList<String>> existingMessages){
+    public static HashMap<String, Object> respondToHandshakeMessage(ArrayList<ArrayList<String>> existingMessages, HashMap<String, Object> userDetails){
         HashMap<String, Object> msg = new HashMap<>();
         msg.put(KEY_QUERY, QUERY_HANDSHAKE);
         msg.put(KEY_EXISTING_MESSAGES, existingMessages);
+        msg.put(KEY_USER_DETAILS, userDetails);
         return msg;
     }
 

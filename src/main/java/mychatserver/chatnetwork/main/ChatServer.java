@@ -94,7 +94,7 @@ public class ChatServer implements ChatServerConnectionListener {
         customPrint(username+" connected: User IP: "+chatServerThread.getIP()+". Total connected: "+clients);
         activeUsers.add(user);
         inactiveUsers.remove(user);
-        sendMessageToUser(MessageResponder.respondToHandshakeMessage(existingMessages), chatServerThread);
+        sendMessageToUser(MessageResponder.respondToHandshakeMessage(existingMessages, user), chatServerThread);
         sendMessageToEveryoneExcept(MessageResponder.respondToClientListRequestMessage(activeUsers, inactiveUsers), chatServerThread);
     }
 

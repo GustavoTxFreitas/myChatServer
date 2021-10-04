@@ -11,9 +11,11 @@ import static mychatserver.globalutils.Misc.customPrint;
 public class DatabaseHandler {
 
     public static final int SIGNUP_SUCCESS = 1;
-    public static final int SIGNUP_ALIAS_EXISTS_ERROR = 2;
-    public static final int SIGNUP_EMAIL_EXISTS_ERROR = 3;
-    public static final int SIGNUP_INTERNAL_ERROR = 4;
+    public static final int INTERNAL_SERVER_ERROR = 0;
+    public static final int ALIAS_EXISTS_ERROR = 2;
+    public static final int EMAIL_EXISTS_ERROR = 3;
+    public static final int ACCOUNT_DELETE_SUCCESSFUL = 5;
+    public static final int ACCOUNT_EDIT_SUCCESSFUL = 7;
 
     static private Connection connection;
 
@@ -72,13 +74,13 @@ public class DatabaseHandler {
 
     public static synchronized int createAccount(String firstName, String lastName, String email, String password, String alias){
         if (isAliasValid(alias))
-            return SIGNUP_ALIAS_EXISTS_ERROR;
+            return ALIAS_EXISTS_ERROR;
         try{
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("select email from chat_server.user_details where email = '"+email+"'");
             while(rs.next()){
                 if (rs.getString(1) == email)
-                    return SIGNUP_EMAIL_EXISTS_ERROR;
+                    return EMAIL_EXISTS_ERROR;
             }
             int uid = (int)(Math.random()*1000000);
             PreparedStatement ps = connection.prepareStatement("insert into chat_server.user_details values (?,?,?,?,?,?)");
@@ -92,11 +94,11 @@ public class DatabaseHandler {
             return SIGNUP_SUCCESS;
         }catch (SQLException e){
             System.out.println(e);
-            return SIGNUP_INTERNAL_ERROR;
+            return INTERNAL_SERVER_ERROR;
         }
     }
 
-    public static ArrayList<HashMap<String, Object>> getAllUsers(){
+    public static synchronized ArrayList<HashMap<String, Object>> getAllUsers(){
         try{
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("select fname, lname, email, uname from chat_server.user_details");
@@ -117,7 +119,7 @@ public class DatabaseHandler {
     }
 
     // Returns a hashmap object with firstname, lastname, email and username encoded into it
-    public static HashMap<String, Object> getDetailsFromUsername(String username){
+    public static synchronized HashMap<String, Object> getDetailsFromUsername(String username){
         try{
             PreparedStatement preparedStatement = connection.prepareStatement("select fname, lname, email, uname from chat_server.user_details where uname = ?");
             preparedStatement.setString(1, username);
@@ -131,6 +133,55 @@ public class DatabaseHandler {
             }
             return user;
         } catch (SQLException e){
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    public static synchronized int deleteAccount(String username){
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("delete from chat_server.user_details where uname = ?");
+            preparedStatement.setString(1, username);
+            preparedStatement.execute();
+            return ACCOUNT_DELETE_SUCCESSFUL;
+        }catch (SQLException e){
+            System.out.println(e);
+            return INTERNAL_SERVER_ERROR;
+        }
+    }
+
+    public static synchronized int editAccount(String username, String firstName, String lastName, String password, String email){
+        try{
+            if (!isAliasValid(username)) {
+                PreparedStatement preparedStatement = connection.prepareStatement("update chat_server.user_details set fname = ?, lname = ?, uname = ?, password = ?  where email = ?");
+                preparedStatement.setString(1, firstName);
+                preparedStatement.setString(2, lastName);
+                preparedStatement.setString(3, username);
+                preparedStatement.setString(4, password);
+                preparedStatement.setString(5, email);
+                preparedStatement.executeUpdate();
+                return ACCOUNT_EDIT_SUCCESSFUL;
+            }else{
+                return ALIAS_EXISTS_ERROR;
+            }
+        }
+        catch (SQLException e){
+            System.out.println(e);
+            return INTERNAL_SERVER_ERROR;
+        }
+    }
+
+    public static synchronized String getPassword(String username){
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("select password from chat_server.user_details where uname = ?");
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            String password = null;
+            while(resultSet.next()){
+                password = resultSet.getString(1);
+            }
+            return password;
+        }catch (SQLException e){
             System.out.println(e);
             return null;
         }
