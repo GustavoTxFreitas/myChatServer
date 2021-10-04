@@ -1,6 +1,5 @@
 package mychatserver.credentialnetwork.main;
 
-import mychatserver.credentialnetwork.utils.classes.CredentialDatabaseHandler;
 import mychatserver.credentialnetwork.utils.interfaces.CredentialConnectionListener;
 
 import java.io.IOException;

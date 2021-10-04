@@ -66,6 +66,7 @@ public class ChatServerThread{
 
     public void sendMessage(HashMap<String, Object> message){
         try{
+            System.out.println(message);
             objectOutputStream.writeObject(message);
             objectOutputStream.reset();
         }catch(IOException e){

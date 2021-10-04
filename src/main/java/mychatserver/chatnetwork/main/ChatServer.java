@@ -1,7 +1,7 @@
 package mychatserver.chatnetwork.main;
 
-import mychatserver.chatnetwork.utils.classes.ChatServerDatabaseHandler;
 import mychatserver.chatnetwork.utils.interfaces.ChatServerConnectionListener;
+import mychatserver.globalutils.DatabaseHandler;
 import mychatserver.globalutils.KeyValues;
 import mychatserver.globalutils.MessageResponder;
 
@@ -22,8 +22,8 @@ public class ChatServer implements ChatServerConnectionListener {
     private final SSLServerSocket serverSocket;
     private final ExecutorService executorService;
     private final ArrayList<ChatServerThread> threads;
-    private static ArrayList<String> activeUsers = null;
-    private static ArrayList<String> inactiveUsers = null;
+    private static ArrayList<HashMap<String, Object>> activeUsers = null;
+    private static ArrayList<HashMap<String, Object>> inactiveUsers = null;
     private int clients;
     private final int MAX_CONNECTIONS = 5;
 
@@ -43,7 +43,7 @@ public class ChatServer implements ChatServerConnectionListener {
         threads = new ArrayList<>();
         activeUsers = new ArrayList<>();
         existingMessages = new ArrayList<>();
-        inactiveUsers = ChatServerDatabaseHandler.getAllUsers();
+        inactiveUsers = DatabaseHandler.getAllUsers();
         customPrint("Done initializing the chat server.");
     }
 
@@ -64,10 +64,12 @@ public class ChatServer implements ChatServerConnectionListener {
 
     @Override
     public void clientDisconnected(ChatServerThread chatServerThread, String username) {
+        HashMap<String, Object> user = DatabaseHandler.getDetailsFromUsername(username);
+        System.out.println(user);
         decrementClient();
         customPrint(username+" disconnected. Total clients: "+clients);
-        activeUsers.remove(username);
-        inactiveUsers.add(username);
+        activeUsers.remove(user);
+        inactiveUsers.add(user);
         threads.remove(chatServerThread);
         sendMessageToEveryone(MessageResponder.respondToClientListRequestMessage(activeUsers, inactiveUsers));
     }
@@ -87,10 +89,11 @@ public class ChatServer implements ChatServerConnectionListener {
 
     @Override
     public void clientConnected(ChatServerThread chatServerThread, String username) {
+        HashMap<String, Object> user = DatabaseHandler.getDetailsFromUsername(username);
         incrementClient();
         customPrint(username+" connected: User IP: "+chatServerThread.getIP()+". Total connected: "+clients);
-        activeUsers.add(username);
-        inactiveUsers.remove(username);
+        activeUsers.add(user);
+        inactiveUsers.remove(user);
         sendMessageToUser(MessageResponder.respondToHandshakeMessage(existingMessages), chatServerThread);
         sendMessageToEveryoneExcept(MessageResponder.respondToClientListRequestMessage(activeUsers, inactiveUsers), chatServerThread);
     }

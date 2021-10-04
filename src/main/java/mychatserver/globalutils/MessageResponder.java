@@ -31,7 +31,7 @@ public class MessageResponder {
         return msg;
     }
 
-    public static HashMap<String, Object> respondToClientListRequestMessage(ArrayList<String> activeUsersList, ArrayList<String> inactiveUsersList){
+    public static HashMap<String, Object> respondToClientListRequestMessage(ArrayList<HashMap<String, Object>> activeUsersList, ArrayList<HashMap<String, Object>> inactiveUsersList){
         HashMap<String, Object> msg = new HashMap<>();
         msg.put(KEY_QUERY, QUERY_CLIENT_LIST);
         msg.put(KEY_ACTIVE_USERS_LIST, activeUsersList);

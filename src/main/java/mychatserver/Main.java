@@ -1,9 +1,8 @@
 package mychatserver;
 
 import mychatserver.chatnetwork.main.ChatServer;
-import mychatserver.chatnetwork.utils.classes.ChatServerDatabaseHandler;
 import mychatserver.credentialnetwork.main.CredentialServer;
-import mychatserver.credentialnetwork.utils.classes.CredentialDatabaseHandler;
+import mychatserver.globalutils.DatabaseHandler;
 
 import java.io.IOException;
 
@@ -11,9 +10,8 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            CredentialDatabaseHandler.getConnection();
-            ChatServerDatabaseHandler.getConnection();
-            System.setProperty("javax.net.ssl.keyStore", "myChatKeyStore.jks");
+            DatabaseHandler.getConnection();
+            System.setProperty("javax.net.ssl.keyStore", "src/main/java/myChatKeyStore.jks");
             System.setProperty("javax.net.ssl.keyStorePassword", "cPPMq4IXThdRK1gf");
             CredentialServer credentialServer = new CredentialServer();
             ChatServer chatServer = new ChatServer();
