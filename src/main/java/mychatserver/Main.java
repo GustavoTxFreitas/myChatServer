@@ -13,7 +13,7 @@ public class Main {
         try {
             CredentialDatabaseHandler.getConnection();
             ChatServerDatabaseHandler.getConnection();
-            System.setProperty("javax.net.ssl.keyStore", "myChatKeyStore.jks");
+            System.setProperty("javax.net.ssl.keyStore", "src/main/java/myChatKeyStore.jks");
             System.setProperty("javax.net.ssl.keyStorePassword", "cPPMq4IXThdRK1gf");
             CredentialServer credentialServer = new CredentialServer();
             ChatServer chatServer = new ChatServer();

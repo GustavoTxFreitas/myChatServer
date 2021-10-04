@@ -15,7 +15,8 @@ public class ChatServerDatabaseHandler {
         connection = null;
         try{
             customPrint("Attempting to establish connection to the database server.");
-            connection = DriverManager.getConnection(url, user, password);
+//            connection = DriverManager.getConnection(url, user, password);
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/chat_server", "root", "root1234");
             customPrint("Connection established successfully.");
         }catch (Exception e){
             customPrint("Connection to chat database failed! Exiting...");

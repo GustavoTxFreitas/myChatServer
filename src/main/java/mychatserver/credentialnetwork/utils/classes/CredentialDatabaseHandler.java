@@ -24,7 +24,8 @@ public class CredentialDatabaseHandler {
         connection = null;
         try{
             customPrint("Attempting to establish connection to the database server from CredentialDatabaseHandler...");
-            connection = DriverManager.getConnection(url, user, password);
+//            connection = DriverManager.getConnection(url, user, password);
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/chat_server", "root", "root1234");
             customPrint("Connection established successfully!");
         }catch (Exception e){
             customPrint("Connection to credential database failed! Exiting...");
