@@ -19,6 +19,7 @@ public class ChatServerThread{
     public String username;
     private ChatServerConnectionListener chatServerConnectionListener;
     private final SSLSocket socket;
+    private boolean disconnectRequested = false;
 
     public ChatServerThread(SSLSocket socket, ChatServer chatServer){
         customPrint("Thread created");
@@ -47,6 +48,21 @@ public class ChatServerThread{
             case QUERY_CLIENT_LIST -> {
                 chatServerConnectionListener.clientListRequestRecieved(this);
             }
+            case QUERY_EDIT_ACCOUNT_WITH_PASSWORD_AND_WITH_USERNAME -> {
+                chatServerConnectionListener.editAccountWithPasswordAndWithUsernameRequestReceived(this, message);
+            }
+            case QUERY_EDIT_ACCOUNT_WITHOUT_PASSWORD_AND_WITH_USERNAME -> {
+                chatServerConnectionListener.editAccountWithoutPasswordAndWithUsernameRequestReceived(this, message);
+            }
+            case QUERY_EDIT_ACCOUNT_WITH_PASSWORD_AND_WITHOUT_USERNAME -> {
+                chatServerConnectionListener.editAccountWithPasswordAndWithoutUsernameRequestReceived(this, message);
+            }
+            case QUERY_EDIT_ACCOUNT_WITHOUT_PASSWORD_AND_WITHOUT_USERNAME -> {
+                chatServerConnectionListener.editAccountWithoutPasswordAndWithoutUsernameRequestReceived(this, message);
+            }
+            case QUERY_DELETE_ACCOUNT -> {
+                chatServerConnectionListener.deleteAccountRequestReceived(this, message);
+            }
         }
     }
 
@@ -60,16 +76,30 @@ public class ChatServerThread{
                 }
             }
         }catch (Exception e){
-            chatServerConnectionListener.clientDisconnected(this, username);
+            if (!disconnectRequested)
+                chatServerConnectionListener.clientDisconnected(this, username);
         }
     }
 
     public void sendMessage(HashMap<String, Object> message){
         try{
+            System.out.println(message);
             objectOutputStream.writeObject(message);
             objectOutputStream.reset();
         }catch(IOException e){
-            chatServerConnectionListener.clientDisconnected(this, username);
+            if (!disconnectRequested)
+                chatServerConnectionListener.clientDisconnected(this, username);
+        }
+    }
+
+    public void disconnect(){
+        try{
+            disconnectRequested = true;
+            objectOutputStream.close();
+            objectInputStream.close();
+            socket.close();
+        }catch (IOException e){
+//            Sys
         }
     }
 
