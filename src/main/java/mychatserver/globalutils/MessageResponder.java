@@ -40,4 +40,20 @@ public class MessageResponder {
         return msg;
     }
 
+    public static HashMap<String, Object> respondToDeleteAccountRequestMessage(int responseCode, String responseMessage){
+        HashMap<String, Object> msg = new HashMap<>();
+        msg.put(KEY_QUERY, QUERY_DELETE_ACCOUNT);
+        msg.put(KEY_RESPONSE_CODE, responseCode);
+        msg.put(KEY_RESPONSE_MESSAGE, responseMessage);
+        return msg;
+    }
+
+    public static HashMap<String, Object> respondToEditAccountRequestMessage(int responseCode, String responseMessage){
+        HashMap<String, Object> msg = new HashMap<>();
+        msg.put(KEY_QUERY, QUERY_EDIT_ACCOUNT);
+        msg.put(KEY_RESPONSE_CODE, responseCode);
+        msg.put(KEY_RESPONSE_MESSAGE, responseMessage);
+        return msg;
+    }
+
 }

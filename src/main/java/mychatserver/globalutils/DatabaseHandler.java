@@ -150,10 +150,10 @@ public class DatabaseHandler {
         }
     }
 
-    public static synchronized int editAccount(String username, String firstName, String lastName, String password, String email){
+    public static synchronized int editAccountWithPasswordAndWithUsername(String username, String firstName, String lastName, String password, String email){
         try{
             if (!isAliasValid(username)) {
-                PreparedStatement preparedStatement = connection.prepareStatement("update chat_server.user_details set fname = ?, lname = ?, uname = ?, password = ?  where email = ?");
+                PreparedStatement preparedStatement = connection.prepareStatement("update chat_server.user_details set fname = ?, lname = ?, uname = ?, password = ? where email = ?");
                 preparedStatement.setString(1, firstName);
                 preparedStatement.setString(2, lastName);
                 preparedStatement.setString(3, username);
@@ -164,6 +164,57 @@ public class DatabaseHandler {
             }else{
                 return ALIAS_EXISTS_ERROR;
             }
+        }
+        catch (SQLException e){
+            System.out.println(e);
+            return INTERNAL_SERVER_ERROR;
+        }
+    }
+
+    public static synchronized int editAccountWithoutPasswordAndWithUsername(String username, String firstName, String lastName, String email){
+        try{
+            if (!isAliasValid(username)) {
+                PreparedStatement preparedStatement = connection.prepareStatement("update chat_server.user_details set fname = ?, lname = ?, uname = ? where email = ?");
+                preparedStatement.setString(1, firstName);
+                preparedStatement.setString(2, lastName);
+                preparedStatement.setString(3, username);
+                preparedStatement.setString(4, email);
+                preparedStatement.executeUpdate();
+                return ACCOUNT_EDIT_SUCCESSFUL;
+            }else{
+                return ALIAS_EXISTS_ERROR;
+            }
+        }
+        catch (SQLException e){
+            System.out.println(e);
+            return INTERNAL_SERVER_ERROR;
+        }
+    }
+
+    public static synchronized int editAccountWithPasswordAndWithoutUsername(String password, String firstName, String lastName, String email){
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("update chat_server.user_details set fname = ?, lname = ?, password = ? where email = ?");
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setString(3, password);
+            preparedStatement.setString(4, email);
+            preparedStatement.executeUpdate();
+            return ACCOUNT_EDIT_SUCCESSFUL;
+        }
+        catch (SQLException e){
+            System.out.println(e);
+            return INTERNAL_SERVER_ERROR;
+        }
+    }
+
+    public static synchronized int editAccountWithoutPasswordAndWithoutUsername(String firstName, String lastName, String email){
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("update chat_server.user_details set fname = ?, lname = ? where email = ?");
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setString(3, email);
+            preparedStatement.executeUpdate();
+            return ACCOUNT_EDIT_SUCCESSFUL;
         }
         catch (SQLException e){
             System.out.println(e);

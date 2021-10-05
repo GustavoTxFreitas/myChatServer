@@ -25,7 +25,10 @@ public class KeyValues {
     public static final int QUERY_SEND_MESSAGE = 5;
     public static final int QUERY_CLIENT_LIST = 6;
     public static final int QUERY_DELETE_ACCOUNT = 8;
-    public static final int QUERY_EDIT_ACCOUNT = 9;
-    public static final int QUERY_REQUEST_PASSWORD = 10;
+    public static final int QUERY_EDIT_ACCOUNT = 13; // sent by the server as a response to queries 9, 10, 11, 12
+    public static final int QUERY_EDIT_ACCOUNT_WITH_PASSWORD_AND_WITH_USERNAME = 9;
+    public static final int QUERY_EDIT_ACCOUNT_WITHOUT_PASSWORD_AND_WITHOUT_USERNAME = 10;
+    public static final int QUERY_EDIT_ACCOUNT_WITHOUT_PASSWORD_AND_WITH_USERNAME = 11;
+    public static final int QUERY_EDIT_ACCOUNT_WITH_PASSWORD_AND_WITHOUT_USERNAME = 12;
 
 }
