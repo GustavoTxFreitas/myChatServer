@@ -177,6 +177,11 @@ public class ChatServer implements ChatServerConnectionListener {
         }
     }
 
+    @Override
+    public void typingStatusUpdateReceived(ChatServerThread chatServerThread, HashMap<String, Object> message) {
+        sendMessageToEveryone(message);
+    }
+
     private void disconnectClient(ChatServerThread chatServerThread, HashMap<String, Object> user){
         inactiveUsers = DatabaseHandler.getAllUsers();
         activeUsers.remove(user);

@@ -15,5 +15,6 @@ public interface ChatServerConnectionListener {
     void editAccountWithPasswordAndWithoutUsernameRequestReceived(ChatServerThread chatServerThread, HashMap<String, Object> message);
     void editAccountWithoutPasswordAndWithoutUsernameRequestReceived(ChatServerThread chatServerThread, HashMap<String, Object> message);
     void deleteAccountRequestReceived(ChatServerThread chatServerThread, HashMap<String, Object> message);
+    void typingStatusUpdateReceived(ChatServerThread chatServerThread, HashMap<String, Object> message);
 
 }

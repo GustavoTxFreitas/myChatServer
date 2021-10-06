@@ -15,9 +15,12 @@ public class KeyValues {
     public static final String KEY_INACTIVE_USERS_LIST = "inactive_users";
     public static final String KEY_EXISTING_MESSAGES = "existing_messages";
     public static final String KEY_USER_DETAILS = "user_details";
+    public static final String KEY_TYPING_STATUS = "typing_status";
 
     public static final int RESPONSE_CODE_SUCCESS = 1; // Used when some operation is successful
     public static final int RESPONSE_CODE_FAILURE = 2; // Used when some operation is successful
+    public static final int TYPING_STATUS_ON = 14;
+    private static final int TYPING_STATUS_OFF = 15;
 
     public static final int QUERY_HANDSHAKE = 7;
     public static final int QUERY_LOGIN_REQUEST = 3;   // Sent from the client to request a login
@@ -30,5 +33,6 @@ public class KeyValues {
     public static final int QUERY_EDIT_ACCOUNT_WITHOUT_PASSWORD_AND_WITHOUT_USERNAME = 10;
     public static final int QUERY_EDIT_ACCOUNT_WITHOUT_PASSWORD_AND_WITH_USERNAME = 11;
     public static final int QUERY_EDIT_ACCOUNT_WITH_PASSWORD_AND_WITHOUT_USERNAME = 12;
+    public static final int QUERY_TYPING_STATUS_UPDATE = 16;
 
 }

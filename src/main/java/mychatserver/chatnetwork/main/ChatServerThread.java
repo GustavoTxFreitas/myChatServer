@@ -63,6 +63,9 @@ public class ChatServerThread{
             case QUERY_DELETE_ACCOUNT -> {
                 chatServerConnectionListener.deleteAccountRequestReceived(this, message);
             }
+            case QUERY_TYPING_STATUS_UPDATE -> {
+                chatServerConnectionListener.typingStatusUpdateReceived(this, message);
+            }
         }
     }
 
